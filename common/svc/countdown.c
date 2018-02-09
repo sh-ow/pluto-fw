@@ -58,6 +58,7 @@ static void _svc_countdown_stop(svc_countdown_priv_t *cd) {
 
 void svc_countdown_stop(uint8_t index) {
 	_svc_countdown_stop(&(svc_countdowns[index]));
+	svc_melody_stop();
 }
 
 void svc_countdown_start(uint8_t index) {

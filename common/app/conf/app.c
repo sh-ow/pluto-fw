@@ -49,6 +49,27 @@ static const svc_menu_item_adj_t menu_item_keybeep_freq = {
 };
 
 
+static int32_t keybeep_other_freq_get(void *ud) {
+	return svc_beep_key_get_other_freq();
+}
+
+static void keybeep_other_freq_set(uint8_t dig, int8_t dir, void *user_data) {
+	int16_t inc = dir*ipow(10, dig);
+	int16_t va = svc_beep_key_get_other_freq();
+	va = CLAMP(va+inc, 400, 9999);
+	svc_beep_key_set_other_freq(va);
+}
+
+static const svc_menu_item_adj_t menu_item_keybeep_other_freq = {
+	.type = SVC_MENU_ITEM_T_ADJ,
+	.header = "ko",
+	.text = " kefo",
+	.digits = 4,
+	.handler_get = keybeep_other_freq_get,
+	.handler_set = keybeep_other_freq_set,
+};
+
+
 static int32_t keybeep_duration_get(void *ud) {
 	return svc_beep_key_get_duration();
 }
@@ -398,6 +419,7 @@ static const svc_menu_item_text_t menu_item_debug = {
 static const svc_menu_item_text_t *menu_items[] = {
 	(void*)&menu_item_keybeep,
 	(void*)&menu_item_keybeep_freq,
+	(void*)&menu_item_keybeep_other_freq,
 	(void*)&menu_item_keybeep_duration,
 	(void*)&menu_item_beep_enable,
 	(void*)&menu_item_hourbeep,

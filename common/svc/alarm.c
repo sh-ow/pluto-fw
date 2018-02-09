@@ -63,6 +63,7 @@ uint8_t svc_alarm_get_pending(void) {
 
 void svc_alarm_clear_pending(void) {
 	alarm_flags &= ~AF_PENDING;
+	svc_melody_stop();
 }
 
 void svc_alarm_init(void) {

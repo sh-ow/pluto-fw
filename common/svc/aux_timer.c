@@ -17,6 +17,10 @@ void svc_aux_timer_set_required(svc_aux_timer_required_t which, uint8_t state) {
 	hal_aux_timer_set(!!aux_timer_req);
 }
 
+svc_aux_timer_required_t svc_aux_timer_get_required(void) {
+	return aux_timer_req;
+}
+
 void svc_aux_timer_handler(void) {
 	if(aux_timer_req & SVC_AUX_TIMER_REQUIRED_BEEP) {
 		svc_aux_timer_beep_handler();

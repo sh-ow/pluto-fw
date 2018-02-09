@@ -34,6 +34,11 @@ void svc_melody_play(uint8_t melody) {
 
 void svc_melody_stop(void) {
 	svc_aux_timer_set_required(SVC_AUX_TIMER_REQUIRED_MELODY, 0);
+	hal_beep(0);
+}
+
+uint8_t svc_melody_get_play(void) {
+	return !!(svc_aux_timer_get_required() & SVC_AUX_TIMER_REQUIRED_MELODY);
 }
 
 void svc_aux_timer_melody_handler(void) {

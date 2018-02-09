@@ -16,14 +16,20 @@ static void launch(void *papp) {
 	app_launch(app);
 }
 
+/* make beep of other frequency when returning to 'home' menu */
+static void launch_time(void *papp) {
+	svc_beep_key_one_time_other_freq();
+	launch(papp);
+}
+
 static void menu_time(void)
 {
-	launch((void *)&app_app_time);
+	launch_time((void *)&app_app_time);
 }
 
 static const svc_menu_item_text_t menu_item0 = {
 	.text = " time",
-	.handler = launch,
+	.handler = launch_time,
 	.user_data = (void *)&app_app_time,
 };
 static const svc_menu_item_text_t menu_item1 = {

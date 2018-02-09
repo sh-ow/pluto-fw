@@ -14,7 +14,6 @@ void svc_main_proc(svc_main_proc_event_t event) {
 		svc_alarm_clear_pending();
 		svc_countdown_clear_pending();
 		keypress = 1;
-		svc_beep_key();
 	}
 	if(event & SVC_MAIN_PROC_EVENT_AUX_TIMER) {
 		svc_aux_timer_handler();
@@ -45,6 +44,10 @@ void svc_main_proc(svc_main_proc_event_t event) {
 			}
 		}
 		app_current->views[app_current->priv->view_current].main(app_current->priv->view_current, app_current, event);
+	}
+
+	if((event & (SVC_MAIN_PROC_EVENT_KEY_ANY | SVC_MAIN_PROC_EVENT_KEY_ANY_LONG)) && !svc_melody_get_play()) {
+		svc_beep_key();
 	}
 
 	if(svc_chro_get_any_running()) {

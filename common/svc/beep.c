@@ -33,11 +33,25 @@ void svc_aux_timer_beep_handler(void) {
 static uint16_t SECTION_INFOMEM beep_key_freq = 550;
 static uint8_t  SECTION_INFOMEM beep_key_enable = 1;
 static uint16_t SECTION_INFOMEM beep_key_duration = 5;
+static uint16_t SECTION_INFOMEM beep_key_other_freq = 700;
+static uint8_t beep_key_one_time_other_freq = 0;
+
+/* make other beep for 'home' menu (=time) */
+void svc_beep_key_one_time_other_freq(void)
+{
+	beep_key_one_time_other_freq = 1;
+}
 
 void svc_beep_key(void) {
 	svc_melody_stop();
 	if(beep_key_enable) {
-		svc_beep_timed(beep_key_freq, beep_key_duration);
+		if(beep_key_one_time_other_freq) {
+			svc_beep_timed(beep_key_other_freq, beep_key_duration);
+			beep_key_one_time_other_freq = 0;
+		}
+		else {
+			svc_beep_timed(beep_key_freq, beep_key_duration);
+		}
 	}
 }
 
@@ -75,20 +89,29 @@ void svc_beep_hour(void) {
 	}
 }
 
-uint16_t svc_beep_key_get_freq(void) {
-	return beep_key_freq;
-}
-
-uint16_t svc_beep_key_get_duration(void) {
-	return beep_key_duration;
-}
-
+/* beep for key press */
 void svc_beep_key_set_freq(uint16_t f) {
 	beep_key_freq = f;
 }
 
+uint16_t svc_beep_key_get_freq(void) {
+	return beep_key_freq;
+}
+
+void svc_beep_key_set_other_freq(uint16_t f) {
+	beep_key_other_freq = f;
+}
+
+uint16_t svc_beep_key_get_other_freq(void) {
+	return beep_key_other_freq;
+}
+
 void svc_beep_key_set_duration(uint16_t d) {
 	beep_key_duration = d;
+}
+
+uint16_t svc_beep_key_get_duration(void) {
+	return beep_key_duration;
 }
 
 void svc_beep_key_set_enable(uint8_t e) {
@@ -99,6 +122,23 @@ uint8_t svc_beep_key_get_enable(void) {
 	return beep_key_enable;
 }
 
+/* beep for changed hour */
+void svc_beep_hour_set_freq(uint16_t f) {
+	beep_hour_freq = f;
+}
+
+uint16_t svc_beep_hour_get_freq(void) {
+	return beep_hour_freq;
+}
+
+void svc_beep_hour_set_duration(uint16_t d) {
+	beep_hour_duration = d;
+}
+
+uint16_t svc_beep_hour_get_duration(void) {
+	return beep_hour_duration;
+}
+
 void svc_beep_hour_set_enable(uint8_t e) {
 	beep_hour_enable = !!e;
 }
@@ -107,36 +147,20 @@ uint8_t svc_beep_hour_get_enable(void) {
 	return beep_hour_enable;
 }
 
-uint16_t svc_beep_hour_get_freq(void) {
-	return beep_hour_freq;
-}
-
-uint16_t svc_beep_hour_get_duration(void) {
-	return beep_hour_duration;
-}
-
-void svc_beep_hour_set_freq(uint16_t f) {
-	beep_hour_freq = f;
-}
-
-void svc_beep_hour_set_duration(uint16_t d) {
-	beep_hour_duration = d;
+void svc_beep_hour_quiet_set_enable(uint8_t e) {
+	beep_hour_quiet_enable = !!e;
 }
 
 uint8_t svc_beep_hour_quiet_get_enable(void) {
 	return beep_hour_quiet_enable;
 }
 
-void svc_beep_hour_quiet_set_enable(uint8_t e) {
-	beep_hour_quiet_enable = !!e;
+void svc_beep_hour_quiet_set_interval(uint8_t s, uint8_t e) {
+	beep_hour_quiet[0] = s;
+	beep_hour_quiet[1] = e;
 }
 
 void svc_beep_hour_quiet_get_interval(uint8_t *s, uint8_t *e) {
 	*s = beep_hour_quiet[0];
 	*e = beep_hour_quiet[1];
-}
-
-void svc_beep_hour_quiet_set_interval(uint8_t s, uint8_t e) {
-	beep_hour_quiet[0] = s;
-	beep_hour_quiet[1] = e;
 }

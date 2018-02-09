@@ -14,6 +14,11 @@ typedef struct {
 
 static void main(uint8_t view, const app_t *app, svc_main_proc_event_t event) {
 	hal_lcd_clear();
+
+	if(event & (SVC_MAIN_PROC_EVENT_KEY_ANY | SVC_MAIN_PROC_EVENT_KEY_ANY_LONG)) {
+		svc_melody_stop();
+	}
+
 	if(event & SVC_MAIN_PROC_EVENT_KEY_UP) {
 		INC_MOD(PRIV(app)->item_current, svc_melodies_n);
 	}
