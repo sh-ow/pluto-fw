@@ -3,6 +3,7 @@
 
 static void menu_exit(void) {
 	app_set_view(app_current, 0);
+	svc_beep_key_one_time_other_freq();
 }
 
 static void lang_set(uint8_t choice, void *ud) {
