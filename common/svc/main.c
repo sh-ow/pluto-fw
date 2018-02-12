@@ -37,11 +37,29 @@ void svc_main_proc(svc_main_proc_event_t event) {
 	if(!(event & SVC_MAIN_PROC_EVENT_AUX_TIMER) || svc_aux_timer_get_call_main()) {
 		app_current_update();
 		hal_lcd_set_mode(HAL_LCD_MODE_BUFFERED);
-		if(app_view_changed) {
+		if(app_changed) { /* changing app: view leave handler of previous app, leave handler of previous app, enter handler of current app, view enter handler of current app,  */
+			if(app_previous->views[app_previous->priv->view_current].leave) {
+				app_previous->views[app_previous->priv->view_current].leave(app_previous->priv->view_current, app_previous);
+			}
+			if(app_previous->leave) {
+				app_previous->leave(app_previous);
+			}
+			if(app_current->enter) {
+				app_current->enter(app_current);
+			}
 			if(app_current->views[app_current->priv->view_current].enter) {
 				app_current->views[app_current->priv->view_current].enter(app_current->priv->view_current, app_current);
-				app_view_changed = 0;
 			}
+			app_changed = 0;
+		}
+		else if(app_view_changed) { /* changing view: view leave handler of previous view, view enter handler of current view */
+			if(app_current->views[app_current->priv->view_previous].leave) {
+				app_current->views[app_current->priv->view_previous].leave(app_current->priv->view_previous, app_current);
+			}
+			if(app_current->views[app_current->priv->view_current].enter) {
+				app_current->views[app_current->priv->view_current].enter(app_current->priv->view_current, app_current);
+			}
+			app_view_changed = 0;
 		}
 		app_current->views[app_current->priv->view_current].main(app_current->priv->view_current, app_current, event);
 	}

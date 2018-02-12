@@ -1,6 +1,8 @@
 #include "apps.h"
 
 const app_t *app_current = &app_app_time;
+const app_t *app_previous = &app_app_time;
+uint8_t app_changed = 0;
 uint8_t app_view_changed = 1;
 static const app_t *app_current_next = &app_app_time;
 
@@ -14,12 +16,14 @@ void app_exit(void) {
 
 void app_current_update(void) {
 	if(app_current_next != app_current) {
-		app_view_changed = 1;
+		app_changed = 1;
 	}
+	app_previous = app_current;
 	app_current = app_current_next;
 }
 
 void app_set_view(const app_t *app, uint8_t view) {
+	app->priv->view_previous = app->priv->view_current;
 	app->priv->view_current = view;
 	app_view_changed = 1;
 }

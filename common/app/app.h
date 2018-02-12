@@ -11,7 +11,7 @@ typedef struct {
 	void (*leave)(uint8_t view, const app_t *app);
 } app_view_t;
 
-#define APP_PRIV_COMMON uint8_t view_current;
+#define APP_PRIV_COMMON uint8_t view_current; uint8_t view_previous;
 
 typedef struct {
 	APP_PRIV_COMMON
@@ -27,6 +27,8 @@ struct app_u {
 };
 
 extern const app_t *app_current;
+extern const app_t *app_previous;
+extern uint8_t app_changed;
 extern uint8_t app_view_changed;
 
 void app_launch(const app_t *app);
