@@ -62,13 +62,16 @@ static uint8_t  SECTION_INFOMEM beep_hour_quiet_enable = 0;
 static uint8_t  SECTION_INFOMEM beep_hour_quiet[2] = {21, 06};
 
 void svc_beep_hour(void) {
+	if(!beep_hour_enable)
+		return;
+
 	static uint8_t hour_last = 255;
 
 	hal_rtc_timedate_t td;
 	hal_rtc_get(&td);
 
 	if (td.h == hour_last)
-            return;
+		return;
 
 	hour_last = td.h;
 
